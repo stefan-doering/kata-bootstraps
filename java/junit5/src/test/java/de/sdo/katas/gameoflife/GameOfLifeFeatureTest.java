@@ -30,11 +30,11 @@ public class GameOfLifeFeatureTest {
 	}
 
 	@Test
-	void multipleIterationsGameOfLifeRun() {
+	void multipleIterationsForStillLife() {
 		final String initialGeneration = "Generation 1:\n" +
 			"4 8\n" +
 			"........\n" +
-			"....*...\n" +
+			"...**...\n" +
 			"...**...\n" +
 			"........";
 		final String finalGeneration = "Generation 51:\n" +
@@ -51,6 +51,44 @@ public class GameOfLifeFeatureTest {
 		}
 
 		assertThat(game.getCurrentBoard().getStringRepresentation()).isEqualTo(finalGeneration);
+	}
+
+	@Test
+	void multipleIterationsForOscillator() {
+		final String initialGeneration = "Generation 1:\n" +
+			"5 5\n" +
+			".....\n" +
+			"..*..\n" +
+			"..*..\n" +
+			"..*..\n" +
+			".....";
+		final String toggledGeneration = "Generation 2:\n" +
+			"5 5\n" +
+			".....\n" +
+			".....\n" +
+			".***.\n" +
+			".....\n" +
+			".....";
+		final String finalGeneration = "Generation 3:\n" +
+			"5 5\n" +
+			".....\n" +
+			"..*..\n" +
+			"..*..\n" +
+			"..*..\n" +
+			".....";
+		final GameOfLifeBoardPrinter gameOfLifeBoardPrinter = new GameOfLifeBoardPrinter();
+		final GameOfLife game = new GameOfLife(initialGeneration, EvolutionRuleSet.ofDefaultRuleSet(), gameOfLifeBoardPrinter);
+
+		System.out.println(game.getCurrentBoard().getStringRepresentation());
+		game.createNewGeneration();
+		System.out.println(game.getCurrentBoard().getStringRepresentation());
+		final String firstStringRepresentation = game.getCurrentBoard().getStringRepresentation();
+		game.createNewGeneration();
+		System.out.println(game.getCurrentBoard().getStringRepresentation());
+		final String secondStringRepresentation = game.getCurrentBoard().getStringRepresentation();
+
+		assertThat(firstStringRepresentation).isEqualTo(toggledGeneration);
+		assertThat(secondStringRepresentation).isEqualTo(finalGeneration);
 	}
 
 }
